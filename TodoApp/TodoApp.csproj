@@ -18,10 +18,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TodoApp.Application\" />
-    <Folder Include="TodoApp.API\Controllers\" />
-    <Folder Include="TodoApp.API\" />
-  </ItemGroup>
-
 </Project>
