@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TodoApp.TodoApp.Application.Services;
 using TodoApp.TodoApp.Domain;
 
@@ -7,10 +6,10 @@ namespace TodoApp.TodoApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoController : ControllerBase
+    public class TodosController : ControllerBase
     {
-        private readonly TodoService _todoService;
-        public TodoController(TodoService todoService)
+        private readonly ITodoService _todoService;
+        public TodosController(ITodoService todoService)
         {
             _todoService = todoService;
         }
@@ -27,20 +26,22 @@ namespace TodoApp.TodoApp.API.Controllers
         {
             var todo = await _todoService.GetTodoItemAsync(id);
             if (todo == null)
-                return NotFound("There were no todo items found");
+            {
+                return NotFound();
+            }
 
             return Ok(todo);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> CreateTodo(TodoItem item)
+        public async Task<ActionResult<TodoItem>> CreateTodo([FromBody] TodoItem item)
         {
             var todoItem = await _todoService.AddTodoItemAsync(item);
             return CreatedAtAction(nameof(CreateTodo), new { id = todoItem?.Id }, todoItem);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TodoItem>> UpdateTodo(int id, TodoItem item)
+        public async Task<ActionResult<TodoItem>> UpdateTodo(int id, [FromBody] TodoItem item)
         {
             var todoItemToUpdate = await _todoService.UpdateTodoItemAsync(id, item);
             return todoItemToUpdate ? NoContent() : BadRequest();
